@@ -10,31 +10,43 @@ import until.interfaceUsuario;
 
 public class Main {
     public static void main(String[] args) {
-
+        // Cria uma instância da interface de usuário e uma lista para armazenar os financiamentos
         interfaceUsuario interfaceUsuario = new interfaceUsuario();
         List<Financiamento> ListaDEfinanciamento = new ArrayList<Financiamento>();
 
-
+        // Adiciona alguns financiamentos pré-cadastrados
         ListaDEfinanciamento.add(new Casa(200000, 30, 0.08, 220000,50,65));
         ListaDEfinanciamento.add(new Casa(300000, 25, 0.075, 380000,39,60));
         ListaDEfinanciamento.add(new Apartamento(150000, 20, 0.09, 155000,20,10));
         ListaDEfinanciamento.add(new Apartamento(250000, 35, 0.082, 275000,15,8));
-        ListaDEfinanciamento.add(new Terreno(250000, 35, 0.082, 275000,true,false));
+        ListaDEfinanciamento.add(new Terreno(250000, 35, 0.082, 275000,"Comercial"));
 
-
+        // Solicita ao usuário os dados do novo financiamento
+        String tipoImovel = interfaceUsuario.tipoImovel();
         double valorImovelNovo = interfaceUsuario.pedirValorimovel();
         double taxaJurosNova = interfaceUsuario.pedirtaxaJuros();
         int prazoFinanciamentoNovo = interfaceUsuario.pedirPrazoFinancimento();
-        boolean zonaResidencial = interfaceUsuario.zonaResidecial();
-        boolean zonaComercial = interfaceUsuario.zonaComercial()
-                ;
-
-
         double valorFinanciamentoNovo = valorImovelNovo;
 
-        // Adiciona o novo financiamento à lista com todos os seus dados
-        ListaDEfinanciamento.add(new Terreno(valorImovelNovo, prazoFinanciamentoNovo, taxaJurosNova, valorFinanciamentoNovo,zonaResidencial,zonaComercial));
+        // Limpa o buffer antes de usar nextLine() novamente
+        interfaceUsuario.scanner.nextLine();
 
+        if (tipoImovel.equalsIgnoreCase("Terreno")) {
+            String zonaTerreno = interfaceUsuario.zonaTerreno();
+            ListaDEfinanciamento.add(new Terreno(valorImovelNovo, prazoFinanciamentoNovo, taxaJurosNova, valorFinanciamentoNovo, zonaTerreno));
+        } else if (tipoImovel.equalsIgnoreCase("Casa")) {
+            System.out.print("Digite a área construída: ");
+            double areaConstruida = interfaceUsuario.scanner.nextDouble();
+            System.out.print("Digite a área do terreno: ");
+            double areaTerreno = interfaceUsuario.scanner.nextDouble();
+            ListaDEfinanciamento.add(new Casa(valorImovelNovo, prazoFinanciamentoNovo, taxaJurosNova, valorFinanciamentoNovo, areaConstruida, areaTerreno));
+        } else if (tipoImovel.equalsIgnoreCase("Apartamento")) {
+            System.out.print("Digite o numero de vagas: ");
+            int vagasGaragem = (int) interfaceUsuario.scanner.nextDouble();
+            System.out.print("Digite o número do andar: ");
+            int numeroAndar = (int) interfaceUsuario.scanner.nextDouble();
+            ListaDEfinanciamento.add(new Apartamento(valorImovelNovo, prazoFinanciamentoNovo, taxaJurosNova, valorFinanciamentoNovo, vagasGaragem, numeroAndar));
+        }
 
         System.out.println("\n--- Seus Financiamentos Cadastrados ---");
         double totalGeralFinanciamentos = 0;

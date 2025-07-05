@@ -27,4 +27,14 @@ public class Apartamento extends Financiamento{
         return numerador / denominador;
     }
 
+    @Override
+    public String toString() {
+        return "Apartamento: R$ " + String.format("%.2f", valorImovel) +
+                " | Financiamento: R$ " + String.format("%.2f", valorFinanciamento) +
+                " | Prazo: " + prazoFinanciamento + " anos" +
+                " | Taxa Juros: " + String.format("%.2f", taxaJurosAnual * 100) + "% a.a." +
+                " | Vagas: " + vagasGaragem +
+                " | Andar: " + numeroAndar;
+    }
+
 }

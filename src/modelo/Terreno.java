@@ -2,20 +2,17 @@ package modelo;
 
 public class Terreno extends Financiamento {
 
-    public boolean zonaResidencial;
-    public boolean zonaComercial;
+    public String zonaTerreno;
 
-    public boolean getzonaResidecial() {
-        return this.zonaResidencial;
-    }
-    public boolean getzonaComercial() {
-        return this.zonaComercial;
+
+    public String getZonaTerreno() {
+        return this.zonaTerreno;
     }
 
-    public Terreno(double valorDesejadoImovel, int prazoFinanciamentoEmAnos, double taxaJurosAnual, double valorDoFinanciamento, boolean zonaResidencial, boolean zonaComercial){
+
+    public Terreno(double valorDesejadoImovel, int prazoFinanciamentoEmAnos, double taxaJurosAnual, double valorDoFinanciamento, String zonaTerreno){
         super(valorDesejadoImovel, prazoFinanciamentoEmAnos, taxaJurosAnual, valorDoFinanciamento);
-        this.zonaResidencial = zonaResidencial;
-        this.zonaComercial = zonaComercial;
+        this.zonaTerreno = zonaTerreno;
     }
 
     public double calcularPagamentoMensal() {
@@ -37,5 +34,14 @@ public class Terreno extends Financiamento {
         double parcelaCalculada = valorFinanciamentoComAcrecimo * (taxaJurosMensal * fator) / (fator - 1);
 
         return parcelaCalculada;
+    }
+
+    @Override
+    public String toString() {
+        return "Terreno: R$ " + String.format("%.2f", valorImovel) +
+                " | Financiamento: R$ " + String.format("%.2f", valorFinanciamento) +
+                " | Prazo: " + prazoFinanciamento + " anos" +
+                " | Taxa Juros: " + String.format("%.2f", taxaJurosAnual * 100) + "% a.a." +
+                " | Zona: " + zonaTerreno;
     }
 }
