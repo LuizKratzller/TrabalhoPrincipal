@@ -1,5 +1,7 @@
 package modelo;
 
+import java.util.Locale;
+
 public class Terreno extends Financiamento {
 
     public String zonaTerreno;
@@ -43,5 +45,15 @@ public class Terreno extends Financiamento {
                 " | Prazo: " + prazoFinanciamento + " anos" +
                 " | Taxa Juros: " + String.format("%.2f", taxaJurosAnual * 100) + "% a.a." +
                 " | Zona: " + zonaTerreno;
+    }
+    public String paraFormatoArquivo() {
+        // Ordem: tipo;valorImovel;prazo;taxa;valorFinanciamento;tipoZona
+        String formato = "TERRENO;%.2f;%d;%.4f;%.2f;%s";
+        return String.format(Locale.US, formato,
+                this.getValorImovel(),
+                this.getPrazoFinanciamento(),
+                this.getTaxaJurosAnual(),
+                this.getValorFinanciamento(),
+                this.getZonaTerreno());
     }
 }

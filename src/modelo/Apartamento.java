@@ -1,14 +1,24 @@
 package modelo;
 
+import java.util.Locale;
+
 public class Apartamento extends Financiamento{
 
-    private int vagasGaragem;
-    private int numeroAndar;
+    public int vagasGaragem;
+    public int numeroAndar;
 
     public Apartamento(double valorDesejadoImovel, int prazoFinanciamentoEmAnos, double taxaJurosAnual, double valorDoFinanciamento, int vagasGaragem, int numeroAndar){
         super(valorDesejadoImovel, prazoFinanciamentoEmAnos, taxaJurosAnual, valorDoFinanciamento);
         this.vagasGaragem = vagasGaragem;
         this.numeroAndar = numeroAndar;
+    }
+
+    public int getNumeroAndar() {
+        return this.numeroAndar;
+    }
+
+    public int getVagasGaragem() {
+        return this.vagasGaragem;
     }
 
     public double calcularPagamentoMensal() {
@@ -36,5 +46,15 @@ public class Apartamento extends Financiamento{
                 " | Vagas: " + vagasGaragem +
                 " | Andar: " + numeroAndar;
     }
-
+    public String paraFormatoArquivo() {
+        // Ordem: tipo;valorImovel;prazo;taxa;valorFinanciamento;vagasGaragem;numeroAndar
+        String formato = "APARTAMENTO;%.2f;%d;%.4f;%.2f;%d;%d";
+        return String.format(Locale.US, formato,
+                this.getValorImovel(),
+                this.getPrazoFinanciamento(),
+                this.getTaxaJurosAnual(),
+                this.getValorFinanciamento(),
+                this.getVagasGaragem(),
+                this.getNumeroAndar());
+    }
 }

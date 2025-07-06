@@ -1,8 +1,10 @@
 package modelo;
 
+import java.util.Locale;
+
 public class Casa extends Financiamento{
 
-    private double areaConstruida;
+    public double areaConstruida;
     public double areaTerreno;
 
     public Casa(double valorDesejadoImovel, int prazoFinanciamentoEmAnos, double taxaJurosAnual, double valorDoFinanciamento, double areaConstruida, double areaTerreno){
@@ -11,7 +13,12 @@ public class Casa extends Financiamento{
         this.areaTerreno = areaTerreno;
     }
 
-
+    public double getAreaConstruida(){
+        return this.areaConstruida;
+    }
+    public double getAreaTerreno(){
+        return this.areaTerreno;
+    }
 
     public double calcularPagamentoMensal() {
         double taxaJurosMensal = this.taxaJurosAnual / 12;
@@ -44,5 +51,16 @@ public class Casa extends Financiamento{
                 " | Taxa Juros: " + String.format("%.2f", taxaJurosAnual * 100) + "% a.a." +
                 " | Área construída: " + areaConstruida + "m²" +
                 " | Área terreno: " + areaTerreno + " m²";
+    }
+    public String paraFormatoArquivo() {
+        // Ordem: tipo;valorImovel;prazo;taxa;valorFinanciamento;areaConstruida;areaTerreno
+        String formato = "CASA;%.2f;%d;%.4f;%.2f;%.2f;%.2f";
+        return String.format(Locale.US, formato,
+                this.getValorImovel(),
+                this.getPrazoFinanciamento(),
+                this.getTaxaJurosAnual(),
+                this.getValorFinanciamento(),
+                this.getAreaConstruida(),
+                this.getAreaTerreno());
     }
 }
