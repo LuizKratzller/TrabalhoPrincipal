@@ -1,12 +1,11 @@
 package main;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.File; // Importado para uso em lerFinanciamentos
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Apartamento;
@@ -19,10 +18,12 @@ public class Main {
 
     public static void main(String[] args) {
         interfaceUsuario interfaceUsuario = new interfaceUsuario();
-        String nomeDoArquivo = "financiamentos_salvos.txt";
+        String nomeDoArquivo = "financiamentos.ser"; // Arquivo binário para objetos serializados
 
+        // Carrega os financiamentos salvos anteriormente
         List<Financiamento> ListaDEfinanciamento = lerFinanciamentos(nomeDoArquivo);
 
+        // Se o arquivo não existia, a lista estará vazia. Adiciona dados iniciais.
         if (ListaDEfinanciamento.isEmpty()) {
             System.out.println("Nenhum financiamento encontrado. Adicionando dados iniciais.");
             ListaDEfinanciamento.add(new Casa(200000, 30, 0.08, 220000, 50, 65));
@@ -32,6 +33,7 @@ public class Main {
             ListaDEfinanciamento.add(new Terreno(250000, 35, 0.082, 275000, "Comercial"));
         }
 
+        // Solicita os dados de um novo financiamento ao usuário
         System.out.println("\n--- Adicionar Novo Financiamento ---");
         String tipoImovel = interfaceUsuario.tipoImovel();
         double valorImovelNovo = interfaceUsuario.pedirValorimovel();
@@ -58,6 +60,7 @@ public class Main {
             ListaDEfinanciamento.add(new Apartamento(valorImovelNovo, prazoFinanciamentoNovo, taxaJurosNova, valorFinanciamentoNovo, vagasGaragem, numeroAndar));
         }
 
+        // Mostra a lista completa (dados antigos + o novo)
         System.out.println("\n--- Seus Financiamentos Cadastrados ---");
         double totalGeralFinanciamentos = 0;
 
@@ -71,65 +74,35 @@ public class Main {
         System.out.println("TOTAL GERAL FINANCIADO: R$ " + String.format("%.2f", totalGeralFinanciamentos));
         System.out.println("---------------------------------------");
 
+        // Salva a lista inteira e atualizada, sobrescrevendo o arquivo antigo
         salvarFinanciamentos(ListaDEfinanciamento, nomeDoArquivo);
     }
 
+    // Salva a lista de objetos em um arquivo usando serialização
     public static void salvarFinanciamentos(List<Financiamento> listaFinanciamentos, String nomeArquivo) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomeArquivo, StandardCharsets.UTF_8))) {
-            for (Financiamento fin : listaFinanciamentos) {
-                writer.write(fin.paraFormatoArquivo());
-                writer.newLine();
-            }
-            System.out.println("Dados atualizados e salvos com sucesso no arquivo '" + nomeArquivo + "'!");
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
+            oos.writeObject(listaFinanciamentos);
+            System.out.println("Dados serializados e salvos com sucesso!");
         } catch (IOException e) {
-            System.err.println("Erro ao salvar o arquivo: " + e.getMessage());
+            System.err.println("Erro ao serializar os dados: " + e.getMessage());
         }
     }
 
+    // Lê uma lista de objetos de um arquivo usando desserialização
+    @SuppressWarnings("unchecked") // Suprime o aviso de cast não verificado, que é esperado aqui.
     public static List<Financiamento> lerFinanciamentos(String nomeArquivo) {
         List<Financiamento> financiamentosLidos = new ArrayList<>();
         File arquivo = new File(nomeArquivo);
 
         if (!arquivo.exists()) {
-            return financiamentosLidos;
+            return financiamentosLidos; // Retorna lista vazia se o arquivo não existe
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(arquivo, StandardCharsets.UTF_8))) {
-            String linha;
-            while ((linha = reader.readLine()) != null) {
-                if (linha.trim().isEmpty()) {
-                    continue;
-                }
-
-                String[] partes = linha.split(";");
-                String tipoImovel = partes[0];
-
-                double valorImovel = Double.parseDouble(partes[1]);
-                int prazo = Integer.parseInt(partes[2]);
-                double taxaJuros = Double.parseDouble(partes[3]);
-                double valorFinanciamento = Double.parseDouble(partes[4]);
-
-                switch (tipoImovel) {
-                    case "CASA":
-                        double areaConstruida = Double.parseDouble(partes[5]);
-                        double areaTerreno = Double.parseDouble(partes[6]);
-                        financiamentosLidos.add(new Casa(valorImovel, prazo, taxaJuros, valorFinanciamento, areaConstruida, areaTerreno));
-                        break;
-                    case "APARTAMENTO":
-                        int vagasGaragem = Integer.parseInt(partes[5]);
-                        int numeroAndar = Integer.parseInt(partes[6]);
-                        financiamentosLidos.add(new Apartamento(valorImovel, prazo, taxaJuros, valorFinanciamento, vagasGaragem, numeroAndar));
-                        break;
-                    case "TERRENO":
-                        String zona = partes[5];
-                        financiamentosLidos.add(new Terreno(valorImovel, prazo, taxaJuros, valorFinanciamento, zona));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        } catch (IOException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            System.err.println("Erro ao ler ou processar o arquivo: " + e.getMessage());
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
+            financiamentosLidos = (List<Financiamento>) ois.readObject();
+            System.out.println("Dados desserializados com sucesso!");
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Erro ao desserializar os dados: " + e.getMessage());
         }
         return financiamentosLidos;
     }

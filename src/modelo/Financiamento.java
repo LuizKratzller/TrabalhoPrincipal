@@ -1,9 +1,14 @@
 package modelo;
 
+import java.io.Serializable;
 import java.util.Locale;
 
-public abstract class Financiamento {
-    // Atributos
+//  Declare a classe Financiamento como abstrata e implemente Serializable
+public abstract class Financiamento implements Serializable {
+
+    //  Declare a constante serialVersionUID
+    private static final long serialVersionUID = 1L;
+
     protected double valorImovel;
     protected int prazoFinanciamento;
     protected double taxaJurosAnual;
@@ -17,22 +22,11 @@ public abstract class Financiamento {
         this.valorFinanciamento = valorFinanciamento;
     }
 
-    // Getters para as classes filhas usarem
-    public double getValorImovel() {
-        return valorImovel;
-    }
-
-    public int getPrazoFinanciamento() {
-        return prazoFinanciamento;
-    }
-
-    public double getTaxaJurosAnual() {
-        return taxaJurosAnual;
-    }
-
-    public double getValorFinanciamento() {
-        return valorFinanciamento;
-    }
+    // Getters
+    public double getValorImovel() { return valorImovel; }
+    public int getPrazoFinanciamento() { return prazoFinanciamento; }
+    public double getTaxaJurosAnual() { return taxaJurosAnual; }
+    public double getValorFinanciamento() { return valorFinanciamento; }
 
     @Override
     public String toString() {
@@ -41,5 +35,5 @@ public abstract class Financiamento {
                 this.valorImovel, this.prazoFinanciamento, (this.taxaJurosAnual * 100));
     }
 
-    public abstract String paraFormatoArquivo();
+
 }

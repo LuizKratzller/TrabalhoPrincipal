@@ -75,7 +75,7 @@ public class interfaceUsuario {
     public double pedirtaxaJuros() {
         while (true) {
             try {
-                System.out.print("Digite a taxa de juros anual (ex: 9,5): ");
+                System.out.print("Digite a taxa de juros anual (ex: 1 a 12): ");
                 if (scanner.hasNextDouble()) {
                     double taxa = scanner.nextDouble();
                     if (taxa > 0 && taxa <= 12) {

@@ -1,59 +1,29 @@
 package modelo;
 
+import java.io.Serializable;
 import java.util.Locale;
 
-public class Terreno extends Financiamento {
+public class Terreno extends Financiamento implements Serializable {
 
-    public String zonaTerreno;
+    // Adiciona o ID de versão para a serialização
+    private static final long serialVersionUID = 1L;
 
+    private String tipoZona;
 
-    public String getZonaTerreno() {
-        return this.zonaTerreno;
+    public Terreno(double valorImovel, int prazoFinanciamento, double taxaJurosAnual, double valorFinanciamento, String tipoZona) {
+        super(valorImovel, prazoFinanciamento, taxaJurosAnual, valorFinanciamento);
+        this.tipoZona = tipoZona;
     }
 
-
-    public Terreno(double valorDesejadoImovel, int prazoFinanciamentoEmAnos, double taxaJurosAnual, double valorDoFinanciamento, String zonaTerreno){
-        super(valorDesejadoImovel, prazoFinanciamentoEmAnos, taxaJurosAnual, valorDoFinanciamento);
-        this.zonaTerreno = zonaTerreno;
-    }
-
-    public double calcularPagamentoMensal() {
-
-        double valorFinanciamentoComAcrecimo = this.valorFinanciamento * 1.02;
-
-        double taxaJurosMensal = (this.taxaJurosAnual / 100) / 12;
-        int totalMeses = this.prazoFinanciamento * 12;
-
-        if (totalMeses == 0) {
-            return 0;
-        }
-
-        if (taxaJurosMensal == 0) {
-            return valorFinanciamentoComAcrecimo / totalMeses;
-        }
-
-        double fator = Math.pow(1 + taxaJurosMensal, totalMeses);
-        double parcelaCalculada = valorFinanciamentoComAcrecimo * (taxaJurosMensal * fator) / (fator - 1);
-
-        return parcelaCalculada;
+    // Getter para o atributo específico
+    public String getTipoZona() {
+        return tipoZona;
     }
 
     @Override
     public String toString() {
-        return "Terreno: R$ " + String.format("%.2f", valorImovel) +
-                " | Financiamento: R$ " + String.format("%.2f", valorFinanciamento) +
-                " | Prazo: " + prazoFinanciamento + " anos" +
-                " | Taxa Juros: " + String.format("%.2f", taxaJurosAnual * 100) + "% a.a." +
-                " | Zona: " + zonaTerreno;
+        return "[TERRENO] " + super.toString() + " | Zona: " + this.tipoZona;
     }
-    public String paraFormatoArquivo() {
-        // Ordem: tipo;valorImovel;prazo;taxa;valorFinanciamento;tipoZona
-        String formato = "TERRENO;%.2f;%d;%.4f;%.2f;%s";
-        return String.format(Locale.US, formato,
-                this.getValorImovel(),
-                this.getPrazoFinanciamento(),
-                this.getTaxaJurosAnual(),
-                this.getValorFinanciamento(),
-                this.getZonaTerreno());
-    }
+
+
 }
